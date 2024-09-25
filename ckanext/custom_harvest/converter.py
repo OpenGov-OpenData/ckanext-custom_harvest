@@ -24,6 +24,10 @@ def package_search_to_ckan(source_dict):
             package_dict['tags'].append({'name': tag.get('name')})
     
     package_dict['extras'] = []
+
+    for key in ['metadata_created', 'metadata_modified']:
+        package_dict['extras'].append({'key': 'source_{0}'.format(key), 'value': source_dict.get(key)})
+
     package_dict['extras'].append({'key': 'guid', 'value': source_dict.get('name')})
 
     for extra in source_dict.get('extras', []):
@@ -59,14 +63,14 @@ def package_search_to_ckan(source_dict):
             continue
 
         resource = {
-            'name': resource.get('title', source_dict.get('title')),
+            'name': resource.get('name'),
             'description': resource.get('description', ''),
             'url': resource.get('url'),
             'format': format,
         }
 
         if 'fluent' in config.get('ckan.plugins'):
-            resource['name_translated'] = {'en': resource.get('title', source_dict.get('title'))}
+            resource['name_translated'] = {'en': resource.get('name')}
             resource['description_translated'] = {'en': resource.get('description', '') or ''}
 
         if resource.get('size'):

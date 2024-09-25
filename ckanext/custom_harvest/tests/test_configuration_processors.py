@@ -553,6 +553,71 @@ class TestMappingFields:
 
         assert package["modified_time"] == "11:16:25.000000Z"
 
+    def test_modify_package_mapping_values_from_extras(self):
+        package = {
+            "title": "Test Dataset",
+            "name": "test-dataset"
+        }
+        config = {
+            "map_fields": [
+                {
+                    "source": "extras.access_constraints",
+                    "target": "limitations"
+                },
+                {
+                    "source": "extras.progress",
+                    "target": "progress"
+                }
+            ]
+        }
+        source_dict = {
+            "title": "Test Dataset",
+            "name": "test-dataset",
+            "extras": [
+                {
+                    "key": "access_constraints",
+                    "value": "Cite as: NOAA National Centers of Environmental Information"
+                },
+                {
+                    "key": "progress",
+                    "value": "completed"
+                }
+            ]
+        }
+
+        self.processor.modify_package_dict(package, config, source_dict)
+
+        assert package["limitations"] == "Cite as: NOAA National Centers of Environmental Information"
+        assert package["progress"] == "completed"
+
+    def test_modify_package_mapping_values_from_org_title(self):
+        package = {
+            "title": "Test Dataset 1",
+            "name": "test-dataset-1"
+        }
+        config = {
+            "map_fields": [
+                {
+                    "source": "organization.title",
+                    "target": "publisher"
+                }
+            ]
+        }
+        source_dict = {
+            "title": "Test Dataset 1",
+            "name": "test-dataset-1",
+            "organization": {
+                "title": "National Oceanic and Atmospheric Administration, Department of Commerce",
+                "name": "noaa-gov",
+                "type": "organization",
+                "image_url": "https://fortress.wa.gov/dfw/score/score/images/noaa_logo.png"
+            }
+        }
+
+        self.processor.modify_package_dict(package, config, source_dict)
+
+        assert package["publisher"] == "National Oceanic and Atmospheric Administration, Department of Commerce"
+
 
 class TestCompositeMapping:
 
@@ -758,10 +823,10 @@ class TestContactPoint:
         config = {
             "contact_point": {
                 "default_name": "nonameprovided",
-                "source_name": "extras_contact_name",
+                "source_name": "extras.contact_name",
                 "target_name": "contact_name",
                 "default_email": "noemailprovided@agency.gov",
-                "source_email": "extras_contact_email",
+                "source_email": "extras.contact_email",
                 "target_email": "contact_email"
             }
         }
@@ -787,10 +852,10 @@ class TestContactPoint:
         config = {
             "contact_point": {
                 "default_name": "nonameprovided",
-                "source_name": "extras_responsible_party",
+                "source_name": "extras.responsible_party",
                 "target_name": "contact_name",
                 "default_email": "noemailprovided@agency.gov",
-                "source_email": "extras_contact_email",
+                "source_email": "extras.contact_email",
                 "target_email": "contact_email"
             }
         }
@@ -816,10 +881,10 @@ class TestContactPoint:
         config = {
             "contact_point": {
                 "default_name": "nonameprovided",
-                "source_name": "extras_responsible_party",
+                "source_name": "extras.responsible_party",
                 "target_name": "contact_name",
                 "default_email": "noemailprovided@agency.gov",
-                "source_email": "extras_contact_email",
+                "source_email": "extras.contact_email",
                 "target_email": "contact_email"
             }
         }

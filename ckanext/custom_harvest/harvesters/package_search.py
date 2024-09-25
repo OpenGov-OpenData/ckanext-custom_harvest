@@ -355,7 +355,7 @@ class PackageSearchHarvester(CustomHarvester):
                         new_package_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
                         upload_resources_to_datastore(context, new_package_dict, source_dict)
                     if status == 'change':
-                        # Submit to xloader if dcat_modified date is different since resource urls may not change
+                        # Submit to xloader if modified date is different since resource urls may not change
                         upload_resources_to_datastore(context, package_dict, source_dict)
         except Exception as e:
             dataset = json.loads(harvest_object.content)

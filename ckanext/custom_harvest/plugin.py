@@ -7,16 +7,16 @@ class CustomHarvestPlugin(plugins.SingletonPlugin):
 
     # IPackageController
     def before_index(self, pkg_dict):
-        dcat_modified = utils.parse_date_iso_format(pkg_dict.get('extras_modified_date'))
-        if dcat_modified:
-            if not dcat_modified.endswith('Z'):
-                dcat_modified += 'Z'
-            pkg_dict['metadata_modified'] = dcat_modified
+        source_modified = utils.parse_date_iso_format(pkg_dict.get('extras_source_metadata_modified'))
+        if source_modified:
+            if not source_modified.endswith('Z'):
+                source_modified += 'Z'
+            pkg_dict['metadata_modified'] = source_modified
 
-        dcat_issued = utils.parse_date_iso_format(pkg_dict.get('extras_issued_date'))
-        if dcat_issued:
-            if not dcat_issued.endswith('Z'):
-                dcat_issued += 'Z'
-            pkg_dict['metadata_created'] = dcat_issued
+        source_created = utils.parse_date_iso_format(pkg_dict.get('extras_source_metadata_created'))
+        if source_created:
+            if not source_created.endswith('Z'):
+                source_created += 'Z'
+            pkg_dict['metadata_created'] = source_created
 
         return pkg_dict

@@ -177,7 +177,11 @@ class CopyExtras(BaseConfigProcessor):
 
     @staticmethod
     def modify_package_dict(package_dict, config, source_dict):
-        exclude_keys = ['guid', 'harvest_object_id', 'harvest_source_id', 'harvest_source_title', 'spatial']
+        exclude_keys = [
+            'dcat_issued', 'dcat_modified', 'guid',
+            'harvest_object_id', 'harvest_source_id', 'harvest_source_title',
+            'source_metadata_created', 'source_metadata_modified', 'spatial'
+        ]
 
         if not 'extras' in package_dict:
             package_dict['extras'] = []
@@ -248,11 +252,15 @@ class MappingFields(BaseConfigProcessor):
 
                 value = None
 
-                if source_field.startswith('extras_'):
+                if source_field.startswith('extras.'):
                     # This is an extra field
                     source_extra = get_extra(source_field[7:], source_dict)
                     if source_extra:
                         value = source_extra.get('value')
+                elif source_field.startswith('organization.'):
+                    org_key = source_field.split('.')[1]
+                    if source_dict.get('organization', {}).get(org_key):
+                        value = source_dict.get('organization', {}).get(org_key)
                 else:
                     value = source_dict.get(source_field)
 
@@ -331,7 +339,7 @@ class CompositeMapping(BaseConfigProcessor):
             value_dict = {}
             for subfield in list(composite_map.get(field_name)):
                 mapped_field = composite_map.get(field_name).get(subfield)
-                if mapped_field.startswith('extras_'):
+                if mapped_field.startswith('extras.'):
                     source_extra = get_extra(mapped_field[7:], source_dict)
                     if source_extra and source_extra.get('value') not in ['none', 'null']:
                         value_dict[subfield] = source_extra.get('value')
@@ -362,7 +370,7 @@ class ContactPoint(BaseConfigProcessor):
 
         # Get contact point name
         contact_point_name = contact_point_mapping.get('default_name')
-        if source_name.startswith('extras_'):
+        if source_name.startswith('extras.'):
             source_extra = get_extra(source_name[7:], source_dict)
             if source_extra:
                 contact_point_name = source_extra.get('value')
@@ -388,7 +396,7 @@ class ContactPoint(BaseConfigProcessor):
 
         # Get contact point email
         contact_point_email = contact_point_mapping.get('default_email')
-        if source_email.startswith('extras_'):
+        if source_email.startswith('extras.'):
             source_extra = get_extra(source_email[7:], source_dict)
             if source_extra:
                 contact_point_email = source_extra.get('value') 
