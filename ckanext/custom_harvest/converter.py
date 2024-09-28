@@ -44,13 +44,13 @@ def package_search_to_ckan(source_dict):
                 break
 
     package_dict['resources'] = []
-    for resource in source_dict.get('resources', []):
+    for source_resource in source_dict.get('resources', []):
         # Guess format if not present
         format = ''
-        if resource.get('format'):
-            format = resource.get('format')
-        elif resource.get('mediaType'):
-            ext = mimetypes.guess_extension(resource.get('mediaType'))
+        if source_resource.get('format'):
+            format = source_resource.get('format')
+        elif source_resource.get('mimetype'):
+            ext = mimetypes.guess_extension(source_resource.get('mimetype'))
             if ext:
                 format = ext[1:]
 
@@ -58,24 +58,27 @@ def package_search_to_ckan(source_dict):
         clean_format = ''.join(format.split()).lower()
         if disallow_file_format(clean_format):
             log.debug('Skip disallowed format %s: %s' % (
-                format, resource.get('url'))
+                format, source_resource.get('url'))
             )
             continue
 
         resource = {
-            'name': resource.get('name'),
-            'description': resource.get('description', ''),
-            'url': resource.get('url'),
+            'name': source_resource.get('name'),
+            'description': source_resource.get('description', ''),
+            'url': source_resource.get('url'),
             'format': format,
         }
 
         if 'fluent' in config.get('ckan.plugins'):
-            resource['name_translated'] = {'en': resource.get('name')}
-            resource['description_translated'] = {'en': resource.get('description', '') or ''}
+            resource['name_translated'] = {'en': source_resource.get('name')}
+            resource['description_translated'] = {'en': source_resource.get('description', '') or ''}
 
-        if resource.get('size'):
+        if int(source_resource.get('position')) >= 0:
+            resource['position'] = int(source_resource.get('position'))
+
+        if source_resource.get('size'):
             try:
-                resource['size'] = int(resource.get('size'))
+                resource['size'] = int(source_resource.get('size'))
             except ValueError:
                 pass
         package_dict['resources'].append(resource)

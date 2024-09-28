@@ -3,10 +3,13 @@ from ckanext.custom_harvest import utils
 
 
 class CustomHarvestPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IPackageController)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     # IPackageController
-    def before_index(self, pkg_dict):
+    def before_index(self, dataset_dict):
+        return self.before_dataset_index(dataset_dict)
+
+    def before_dataset_index(self, pkg_dict):
         source_modified = utils.parse_date_iso_format(pkg_dict.get('extras_source_metadata_modified'))
         if source_modified:
             if not source_modified.endswith('Z'):

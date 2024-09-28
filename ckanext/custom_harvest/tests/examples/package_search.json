@@ -1,0 +1,844 @@
+{
+    "author": null,
+    "author_email": null,
+    "creator_user_id": "1ecd1fb1-1be6-46bb-b90d-07a0762ed104",
+    "id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+    "isopen": false,
+    "license_id": null,
+    "license_title": null,
+    "maintainer": null,
+    "maintainer_email": null,
+    "metadata_created": "2022-10-28T05:26:58.160579",
+    "metadata_modified": "2023-09-19T21:52:05.501065",
+    "name": "u-s-hourly-precipitation-data2",
+    "notes": "Hourly Precipitation Data (HPD) is digital data set DSI-3240, archived at the National Climatic Data Center (NCDC). The primary source of data for this file is approximately 5,500 US National Weather Service (NWS), Federal Aviation Administration (FAA), and cooperative observer stations in the United States of America, Puerto Rico, the US Virgin Islands, and various Pacific Islands. The earliest data dates vary considerably by state and region: Maine, Pennsylvania, and Texas have data since 1900. The western Pacific region that includes Guam, American Samoa, Marshall Islands, Micronesia, and Palau have data since 1978. Other states and regions have earliest dates between those extremes. The latest data in all states and regions is from the present day. The major parameter in DSI-3240 is precipitation amounts, which are measurements of hourly or daily precipitation accumulation. Accumulation was for longer periods of time if for any reason the rain gauge was out of service or no observer was present. DSI 3240_01 contains data grouped by state; DSI 3240_02 contains data grouped by year.",
+    "num_resources": 16,
+    "num_tags": 42,
+    "organization": {
+        "id": "5f4f1195-e770-4a2a-8f75-195cd98860ce",
+        "name": "noaa-gov",
+        "title": "National Oceanic and Atmospheric Administration, Department of Commerce",
+        "type": "organization",
+        "description": "",
+        "image_url": "https://fortress.wa.gov/dfw/score/score/images/noaa_logo.png",
+        "created": "2020-11-10T15:36:13.098184",
+        "is_organization": true,
+        "approval_status": "approved",
+        "state": "active"
+    },
+    "owner_org": "5f4f1195-e770-4a2a-8f75-195cd98860ce",
+    "private": false,
+    "state": "active",
+    "title": "U.S. Hourly Precipitation Data",
+    "type": "dataset",
+    "url": null,
+    "version": null,
+    "extras": [
+        {
+            "key": "guid",
+            "value": "gov.noaa.ncdc:C00313"
+        },
+        {
+            "key": "spatial_harvester",
+            "value": true
+        },
+        {
+            "key": "spatial-reference-system",
+            "value": ""
+        },
+        {
+            "key": "dataset-reference-date",
+            "value": "[{\"type\": \"publication\", \"value\": \"1951-10\"}]"
+        },
+        {
+            "key": "metadata-language",
+            "value": "eng; USA"
+        },
+        {
+            "key": "metadata-date",
+            "value": "2023-06-23"
+        },
+        {
+            "key": "coupled-resource",
+            "value": "[]"
+        },
+        {
+            "key": "contact-email",
+            "value": "ncei.orders@noaa.gov"
+        },
+        {
+            "key": "frequency-of-update",
+            "value": "asNeeded"
+        },
+        {
+            "key": "spatial-data-service-type",
+            "value": ""
+        },
+        {
+            "key": "progress",
+            "value": "underDevelopment"
+        },
+        {
+            "key": "resource-type",
+            "value": "dataset"
+        },
+        {
+            "key": "licence",
+            "value": "[]"
+        },
+        {
+            "key": "access_constraints",
+            "value": "[\"Cite dataset when used as a source.\", \"Distribution liability: NOAA and NCEI make no warranty, expressed or implied, regarding these data, nor does the fact of distribution constitute such a warranty. NOAA and NCEI cannot assume liability for any damages caused by any errors or omissions in these data. If appropriate, NCEI can only certify that the data it distributes are an authentic copy of the records that were accepted for inclusion in the NCEI archives.\", \"Use liability: NOAA and NCEI cannot provide any warranty as to the accuracy, reliability, or completeness of furnished data. Users assume responsibility to determine the usability of these data. The user is responsible for the results of any application of this data for other than its intended purpose.\"]"
+        },
+        {
+            "key": "graphic-preview-file",
+            "value": "https://www.ncei.noaa.gov/pub/data/metadata/images/C00313_preciphr.png"
+        },
+        {
+            "key": "graphic-preview-description",
+            "value": "Hourly Precipitation Data GIS image"
+        },
+        {
+            "key": "graphic-preview-type",
+            "value": "PNG"
+        },
+        {
+            "key": "temporal-extent-begin",
+            "value": "1940-01-01"
+        },
+        {
+            "key": "temporal-extent-end",
+            "value": "2013-12-31"
+        },
+        {
+            "key": "responsible-party",
+            "value": "[{\"name\": \"NOAA National Centers for Environmental Information\", \"roles\": [\"pointOfContact\"]}]"
+        },
+        {
+            "key": "bbox-east-long",
+            "value": "-60.0"
+        },
+        {
+            "key": "bbox-north-lat",
+            "value": "72.0"
+        },
+        {
+            "key": "bbox-south-lat",
+            "value": "-15.0"
+        },
+        {
+            "key": "bbox-west-long",
+            "value": "130.0"
+        },
+        {
+            "key": "lineage",
+            "value": "The data in this file are a combination of original observations of hourly and daily accumulated precipitation. Precipitation values are checked and edited as necessary by an automated and manual edit."
+        },
+        {
+            "key": "metadata_type",
+            "value": "geospatial"
+        },
+        {
+            "key": "__category_tag_16e15f51-d96e-4051-9124-75665abdc6ff",
+            "value": "[\"Arctic Weather and Extreme Events\",\"Arctic\",\"Energy Infrastructure\",\"Atmospheric, Earth and Ocean Sciences\",\"Transportation\",\"Physical Data\",\"Water\",\"Human Health\",\"Ecosystem Vulnerability\",\"Atmospheric, Earth and Ocean Sciences\",\"Climatology and Meteorology\"]"
+        },
+        {
+            "key": "old-spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[130.0, -15.0], [-60.0, -15.0], [-60.0, 72.0], [130.0, 72.0], [130.0, -15.0]]]}"
+        },
+        {
+            "key": "spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[130.0, -15.0], [-60.0, -15.0], [-60.0, 72.0], [130.0, 72.0], [130.0, -15.0]]]}"
+        },
+        {
+            "key": "harvest_object_id",
+            "value": "3b208664-b8b9-4b21-8e9f-254b15df0c94"
+        },
+        {
+            "key": "harvest_source_id",
+            "value": "2cb3ef77-1683-4c2a-9119-dc65e50917c6"
+        },
+        {
+            "key": "harvest_source_title",
+            "value": "ncdc"
+        }
+    ],
+    "groups": [
+        {
+            "description": "",
+            "display_name": "Climate",
+            "id": "16e15f51-d96e-4051-9124-75665abdc6ff",
+            "image_display_url": "",
+            "name": "climate5434",
+            "title": "Climate"
+        }
+    ],
+    "resources": [
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662367",
+            "description": "Landing page for the dataset.",
+            "format": "",
+            "hash": "",
+            "id": "d831aed6-d50d-4508-ba4d-58e963f769eb",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.510577",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "NCEI Dataset Landing Page",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 0,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00313/html",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662372",
+            "description": "Search for the dataset via a text-based interface.",
+            "format": "",
+            "hash": "",
+            "id": "fc3ae1cd-455f-4151-8f80-54be64afc067",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.510741",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "NCEI Climate Data Online Data Search",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 1,
+            "resource_locator_function": "search",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncdc.noaa.gov/cdo-web/search?datasetid=PRECIP_HLY#",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662374",
+            "description": "Dynamic GIS mapping application to locate stations and data for selected layers.",
+            "format": "",
+            "hash": "",
+            "id": "d7935ccf-74db-454c-802a-f28b23c17b17",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.510871",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "NCEI Climate Data Online Map Server",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 2,
+            "resource_locator_function": "search",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/maps/hourly/?layers=001",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662376",
+            "description": "Direct download for the dataset.",
+            "format": "",
+            "hash": "",
+            "id": "65b7fc97-0674-4b9f-a43e-f82d85407f16",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.510996",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Direct Download (Dataset Files)",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 3,
+            "resource_locator_function": "download",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/pub/data/hourly_precip-3240/",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662378",
+            "description": "ArcGIS Server REST API for the dataset.",
+            "format": "Esri REST",
+            "hash": "",
+            "id": "fba0f17c-f801-441b-a103-9d9e62ef5789",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511123",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "NCEI ArcGIS REST Services Directory",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 4,
+            "resource_locator_function": "search",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://gis.ncdc.noaa.gov/arcgis/rest/services/cdo/precip_hly/MapServer",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662380",
+            "description": "Direct download link for KMZ file.",
+            "format": "KML",
+            "hash": "",
+            "id": "c3fb4eaf-c6a3-4093-934b-7cee62166e98",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511252",
+            "mimetype": "application/vnd.google-earth.kmz",
+            "mimetype_inner": null,
+            "name": "KMZ file for dataset",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 5,
+            "resource_locator_function": "download",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://gis.ncdc.noaa.gov/kml/precip_hly.kmz",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662381",
+            "description": "Documentation of the dataset including a data description, format layout and definitions.",
+            "format": "PDF",
+            "hash": "",
+            "id": "0920853b-5cf8-4bba-8757-fded53759a29",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511382",
+            "mimetype": "application/pdf",
+            "mimetype_inner": null,
+            "name": "NCEI Dataset Documentation",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 6,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/documentation/PRECIP_HLY_documentation.pdf",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662383",
+            "description": "This sample data file shows how the data are formatted in CSV and is for example purposes only.",
+            "format": "CSV",
+            "hash": "",
+            "id": "ae81fe49-7c54-45d0-ad6e-8a39aed11b96",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511507",
+            "mimetype": "text/csv",
+            "mimetype_inner": null,
+            "name": "Hourly Precipitation CSV Sample",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 7,
+            "resource_locator_function": "download",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/samples/PRECIP_HLY_sample_csv.csv",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662385",
+            "description": "This sample data file shows how the data are formatted in fixed-length ASCII text and is for example purposes only.",
+            "format": "",
+            "hash": "",
+            "id": "e1f9a42a-bfe9-4d96-9f43-405ad4092cb9",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511628",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Hourly Precipitation fixed-length ASCII Sample",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 8,
+            "resource_locator_function": "download",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/samples/PRECIP_HLY_sample_ascii.dat",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662387",
+            "description": "Informational resources and data from the Hourly Precipitation dataset.",
+            "format": "HTML",
+            "hash": "",
+            "id": "adecb862-6024-4270-920d-22abbc872832",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511755",
+            "mimetype": "text/html",
+            "mimetype_inner": null,
+            "name": "Hourly Precipitation Dataset Homepage",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 9,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncdc.noaa.gov/IPS/hpd/hpd.html",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662388",
+            "description": "NCEI home page with information, data access and contact information.",
+            "format": "",
+            "hash": "",
+            "id": "59504236-6f6a-499e-806b-883208067ad5",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.511874",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "NOAA National Centers for Environmental Information (NCEI)",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 10,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662390",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "format": "",
+            "hash": "",
+            "id": "7d5c7b0d-de67-4444-bed8-4940858eba37",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.512009",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 11,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662392",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "format": "",
+            "hash": "",
+            "id": "a465d50a-55ba-4bc8-847b-d909a61da1b6",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.512131",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 12,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662393",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "format": "",
+            "hash": "",
+            "id": "fd8fbd29-c217-40aa-b04e-8f85586451b8",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.512249",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 13,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662395",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "format": "",
+            "hash": "",
+            "id": "56a6273d-0e9f-47e5-be94-02ed92127a42",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.512382",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 14,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "url_type": null
+        },
+        {
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2023-09-19T21:52:05.662397",
+            "description": "Follow the link for more information about the related Hourly Precipitation Data Publication.",
+            "format": "",
+            "hash": "",
+            "id": "62a5c3de-16ce-48da-9eae-f220c082a35a",
+            "last_modified": null,
+            "metadata_modified": "2023-09-19T21:52:05.512511",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Hourly Precipitation Data (HPD) Publication",
+            "package_id": "210ac9b4-6392-4a68-8eb7-19104956fca5",
+            "position": 15,
+            "resource_locator_function": "information",
+            "resource_locator_protocol": "HTTPS",
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "url": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00127/html",
+            "url_type": null
+        }
+    ],
+    "tags": [
+        {
+            "display_name": "altitude",
+            "id": "f2a30107-eb21-4060-a3e7-816789829740",
+            "name": "altitude",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "american samoa",
+            "id": "6355bd1f-be89-4899-a925-8cb7f0590df6",
+            "name": "american samoa",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "atlantic ocean",
+            "id": "a3fec8eb-2ebc-4247-bc54-600e5a32ab0a",
+            "name": "atlantic ocean",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "atmosphere",
+            "id": "0e982ad4-e0e7-41bf-adaf-3b9b37213179",
+            "name": "atmosphere",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "caribbean sea",
+            "id": "f328b7e0-71ca-4eb9-84dc-e6247ec3f4c9",
+            "name": "caribbean sea",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "central pacific ocean",
+            "id": "ab2fb647-5f57-4dd3-949e-02acf3660115",
+            "name": "central pacific ocean",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "continent",
+            "id": "a9b8a113-daeb-4dfd-af4a-d209b297c156",
+            "name": "continent",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "doc/noaa/nesdis/ncdc",
+            "id": "bce87bf6-cd35-4e0f-9598-4639b4f28fc4",
+            "name": "doc/noaa/nesdis/ncdc",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "doc/noaa/nesdis/ncei",
+            "id": "2a54b49c-0f5a-4746-aac6-56fc4364ed30",
+            "name": "doc/noaa/nesdis/ncei",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "earth science",
+            "id": "8c331a6c-0bcb-4cc5-964b-34a0792449b5",
+            "name": "earth science",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "equatorial",
+            "id": "edc93821-616b-4ba8-951f-1699568dfa76",
+            "name": "equatorial",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "geographic region",
+            "id": "8f559d17-3c87-4ab4-9b15-d26427f01d6e",
+            "name": "geographic region",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "guam",
+            "id": "32ed8158-83b7-458b-a034-c3c88187d886",
+            "name": "guam",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "hawaiian islands",
+            "id": "97e8ccca-f747-49ef-a820-275fb7a069a7",
+            "name": "hawaiian islands",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "land surface",
+            "id": "7af3bcb3-ff10-48b4-bd3f-f7024f3ef31b",
+            "name": "land surface",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "liquid precipitation",
+            "id": "f1f93433-c854-4fd0-98b3-1283ce799f99",
+            "name": "liquid precipitation",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "marshall islands",
+            "id": "6bec6b02-31be-4ce5-931c-5998284c16e3",
+            "name": "marshall islands",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "micronesia",
+            "id": "5bb11ea2-9892-4f9d-a5d4-2a2a4ac60ebc",
+            "name": "micronesia",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "mid-latitude",
+            "id": "f7a2f3e4-d5de-4870-ae96-c33852f3e94c",
+            "name": "mid-latitude",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "national centers for environmental information",
+            "id": "10a58a14-9088-48b1-abf3-e35e7334ea5a",
+            "name": "national centers for environmental information",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "national climatic data center",
+            "id": "c2700747-f201-4653-8183-555c32d9b8cc",
+            "name": "national climatic data center",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "nesdis",
+            "id": "8c20180c-6160-41e5-85de-313749b9ba58",
+            "name": "nesdis",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "noaa",
+            "id": "fe7a7412-17d7-4b97-8fda-c9909f9aff02",
+            "name": "noaa",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "north america",
+            "id": "67241342-124e-44fc-af5c-2a0935aeddc9",
+            "name": "north america",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "north atlantic ocean",
+            "id": "42775f09-eea3-4082-8787-3879172164bc",
+            "name": "north atlantic ocean",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "ocean",
+            "id": "6de656b5-ce1c-4142-b914-b3ddbd903de6",
+            "name": "ocean",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "pacific ocean",
+            "id": "8558d4f3-1738-4a51-83db-a2f177370f14",
+            "name": "pacific ocean",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "palau",
+            "id": "bdcba0f1-b8be-461a-ac08-97c3ccf17ad4",
+            "name": "palau",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "polar",
+            "id": "a17d165a-4db9-4954-8468-82d72ccace50",
+            "name": "polar",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "precipitation",
+            "id": "b7a5df38-d31a-4f4e-9d1b-425b3a625d99",
+            "name": "precipitation",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "precipitation amount",
+            "id": "7e0adfc4-c4d2-49ce-b5a3-a7364f6e0143",
+            "name": "precipitation amount",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "precipitation rate",
+            "id": "e1a3479b-e2b4-4a92-94b4-d6b37bac099b",
+            "name": "precipitation rate",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "puerto rico",
+            "id": "682abee0-3e87-45c5-8e27-6d447a92b426",
+            "name": "puerto rico",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "rain",
+            "id": "6d6858d1-26ff-4788-95b0-93c95de4f366",
+            "name": "rain",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "snow",
+            "id": "8aa3848d-4966-49b2-8d5f-9b29ef2c6cd8",
+            "name": "snow",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "solid precipitation",
+            "id": "f401be1f-a1d4-4b91-bb5e-56cb5656f8e2",
+            "name": "solid precipitation",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "station height",
+            "id": "bd05be28-a11a-4093-9c91-1eab8e04176d",
+            "name": "station height",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "u.s. department of commerce",
+            "id": "8a36cafe-cdbf-49cd-874b-d36d7430adbe",
+            "name": "u.s. department of commerce",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "united states of america",
+            "id": "d81db043-7ead-4b81-851c-c4d4166cfd92",
+            "name": "united states of america",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "vertical location",
+            "id": "780ba315-b9b4-40ad-9a72-928430994970",
+            "name": "vertical location",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "virgin islands",
+            "id": "8d187942-edcf-4805-b9fb-68001b69cb82",
+            "name": "virgin islands",
+            "state": "active",
+            "vocabulary_id": null
+        },
+        {
+            "display_name": "western pacific ocean",
+            "id": "ae08b6a2-de95-4e68-9520-bce56f52cad7",
+            "name": "western pacific ocean",
+            "state": "active",
+            "vocabulary_id": null
+        }
+    ],
+    "relationships_as_subject": [],
+    "relationships_as_object": []
+}

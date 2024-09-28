@@ -414,6 +414,58 @@ class ContactPoint(BaseConfigProcessor):
             package_dict['extras'].remove(existing_extra)
 
 
+class RemoteGroups(BaseConfigProcessor):
+
+    @staticmethod
+    def check_config(config_obj):
+        if 'remote_groups' in config_obj:
+            if config_obj['remote_groups'] not in ('only_local', 'create'):
+                raise ValueError('remote_groups must be either "only_local" or "create"')
+
+    @staticmethod
+    def modify_package_dict(package_dict, config, source_dict):
+        remote_groups = config.get('remote_groups')
+        if remote_groups not in ('only_local', 'create'):
+            return
+
+        if 'groups' not in package_dict:
+            package_dict['groups'] = []
+
+        # check if remote groups exist locally
+        validated_groups = []
+
+        existing_groups = get_action('group_list')({}, {'all_fields': True})
+        for source_group in source_dict['groups']:
+            found_group = False
+            for existing_group in existing_groups:
+                # Found local group
+                title_match = (source_group.get('title') and
+                    source_group.get('title').lower() == existing_group.get('title').lower())
+                name_match = (source_group.get('name') and
+                    source_group.get('name') == existing_group.get('name'))
+                if title_match or name_match:
+                    found_group = True
+                    validated_groups.append({'id': existing_group['id'], 'name': existing_group['name']})
+                    break
+
+            if remote_groups == 'create' and not found_group:
+                # Group does not exist, create it
+                try:
+                    site_user = get_action('get_site_user')({'model': model, 'ignore_auth': True, 'defer_commit': True}, {})
+                    user_name = site_user['name']
+                    group_dict = {
+                        'name': source_group.get('name'),
+                        'title': source_group.get('title'),
+                        'description': source_group.get('description')
+                    }
+                    new_group = get_action('group_create')({'model': model, 'user': user_name}, group_dict)
+                    validated_groups.append({'id': new_group['id'], 'name': new_group['name']})
+                except Exception:
+                    pass
+
+        package_dict['groups'].extend(validated_groups)
+
+
 class OrganizationFilter(BaseConfigProcessor):
 
     @staticmethod
@@ -437,8 +489,8 @@ class ResourceFormatOrder(BaseConfigProcessor):
                 raise ValueError('Resource format order should be provided as a list of strings')
 
     @staticmethod
-    def modify_package_dict(package_dict, config_obj, source_dict):
-        resource_order = config_obj.get('resource_format_order')
+    def modify_package_dict(package_dict, config, source_dict):
+        resource_order = config.get('resource_format_order')
         if not resource_order:
             return package_dict
         resource_order = [res_format.strip().lower() for res_format in resource_order]

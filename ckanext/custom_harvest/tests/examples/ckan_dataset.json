@@ -1,0 +1,264 @@
+{
+    "title": "U.S. Hourly Precipitation Data",
+    "notes": "Hourly Precipitation Data (HPD) is digital data set DSI-3240, archived at the National Climatic Data Center (NCDC). The primary source of data for this file is approximately 5,500 US National Weather Service (NWS), Federal Aviation Administration (FAA), and cooperative observer stations in the United States of America, Puerto Rico, the US Virgin Islands, and various Pacific Islands. The earliest data dates vary considerably by state and region: Maine, Pennsylvania, and Texas have data since 1900. The western Pacific region that includes Guam, American Samoa, Marshall Islands, Micronesia, and Palau have data since 1978. Other states and regions have earliest dates between those extremes. The latest data in all states and regions is from the present day. The major parameter in DSI-3240 is precipitation amounts, which are measurements of hourly or daily precipitation accumulation. Accumulation was for longer periods of time if for any reason the rain gauge was out of service or no observer was present. DSI 3240_01 contains data grouped by state; DSI 3240_02 contains data grouped by year.",
+    "tags": [
+        {
+            "name": "altitude"
+        },
+        {
+            "name": "american samoa"
+        },
+        {
+            "name": "atlantic ocean"
+        },
+        {
+            "name": "atmosphere"
+        },
+        {
+            "name": "caribbean sea"
+        },
+        {
+            "name": "central pacific ocean"
+        },
+        {
+            "name": "continent"
+        },
+        {
+            "name": "doc/noaa/nesdis/ncdc"
+        },
+        {
+            "name": "doc/noaa/nesdis/ncei"
+        },
+        {
+            "name": "earth science"
+        },
+        {
+            "name": "equatorial"
+        },
+        {
+            "name": "geographic region"
+        },
+        {
+            "name": "guam"
+        },
+        {
+            "name": "hawaiian islands"
+        },
+        {
+            "name": "land surface"
+        },
+        {
+            "name": "liquid precipitation"
+        },
+        {
+            "name": "marshall islands"
+        },
+        {
+            "name": "micronesia"
+        },
+        {
+            "name": "mid-latitude"
+        },
+        {
+            "name": "national centers for environmental information"
+        },
+        {
+            "name": "national climatic data center"
+        },
+        {
+            "name": "nesdis"
+        },
+        {
+            "name": "noaa"
+        },
+        {
+            "name": "north america"
+        },
+        {
+            "name": "north atlantic ocean"
+        },
+        {
+            "name": "ocean"
+        },
+        {
+            "name": "pacific ocean"
+        },
+        {
+            "name": "palau"
+        },
+        {
+            "name": "polar"
+        },
+        {
+            "name": "precipitation"
+        },
+        {
+            "name": "precipitation amount"
+        },
+        {
+            "name": "precipitation rate"
+        },
+        {
+            "name": "puerto rico"
+        },
+        {
+            "name": "rain"
+        },
+        {
+            "name": "snow"
+        },
+        {
+            "name": "solid precipitation"
+        },
+        {
+            "name": "station height"
+        },
+        {
+            "name": "u.s. department of commerce"
+        },
+        {
+            "name": "united states of america"
+        },
+        {
+            "name": "vertical location"
+        },
+        {
+            "name": "virgin islands"
+        },
+        {
+            "name": "western pacific ocean"
+        }
+    ],
+    "extras": [
+        {
+            "key": "source_metadata_created",
+            "value": "2022-10-28T05:26:58.160579"
+        },
+        {
+            "key": "source_metadata_modified",
+            "value": "2023-09-19T21:52:05.501065"
+        },
+        {
+            "key": "guid",
+            "value": "u-s-hourly-precipitation-data2"
+        },
+        {
+            "key": "spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[130.0, -15.0], [-60.0, -15.0], [-60.0, 72.0], [130.0, 72.0], [130.0, -15.0]]]}"
+        }
+    ],
+    "resources": [
+        {
+            "name": "NCEI Dataset Landing Page",
+            "description": "Landing page for the dataset.",
+            "url": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00313/html",
+            "format": "",
+            "position": 0
+        },
+        {
+            "name": "NCEI Climate Data Online Data Search",
+            "description": "Search for the dataset via a text-based interface.",
+            "url": "https://www.ncdc.noaa.gov/cdo-web/search?datasetid=PRECIP_HLY#",
+            "format": "",
+            "position": 1
+        },
+        {
+            "name": "NCEI Climate Data Online Map Server",
+            "description": "Dynamic GIS mapping application to locate stations and data for selected layers.",
+            "url": "https://www.ncei.noaa.gov/maps/hourly/?layers=001",
+            "format": "",
+            "position": 2
+        },
+        {
+            "name": "Direct Download (Dataset Files)",
+            "description": "Direct download for the dataset.",
+            "url": "https://www.ncei.noaa.gov/pub/data/hourly_precip-3240/",
+            "format": "",
+            "position": 3
+        },
+        {
+            "name": "NCEI ArcGIS REST Services Directory",
+            "description": "ArcGIS Server REST API for the dataset.",
+            "url": "https://gis.ncdc.noaa.gov/arcgis/rest/services/cdo/precip_hly/MapServer",
+            "format": "Esri REST",
+            "position": 4
+        },
+        {
+            "name": "KMZ file for dataset",
+            "description": "Direct download link for KMZ file.",
+            "url": "https://gis.ncdc.noaa.gov/kml/precip_hly.kmz",
+            "format": "KML",
+            "position": 5
+        },
+        {
+            "name": "NCEI Dataset Documentation",
+            "description": "Documentation of the dataset including a data description, format layout and definitions.",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/documentation/PRECIP_HLY_documentation.pdf",
+            "format": "PDF",
+            "position": 6
+        },
+        {
+            "name": "Hourly Precipitation CSV Sample",
+            "description": "This sample data file shows how the data are formatted in CSV and is for example purposes only.",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/samples/PRECIP_HLY_sample_csv.csv",
+            "format": "CSV",
+            "position": 7
+        },
+        {
+            "name": "Hourly Precipitation fixed-length ASCII Sample",
+            "description": "This sample data file shows how the data are formatted in fixed-length ASCII text and is for example purposes only.",
+            "url": "https://www.ncei.noaa.gov/pub/data/cdo/samples/PRECIP_HLY_sample_ascii.dat",
+            "format": "",
+            "position": 8
+        },
+        {
+            "name": "Hourly Precipitation Dataset Homepage",
+            "description": "Informational resources and data from the Hourly Precipitation dataset.",
+            "url": "https://www.ncdc.noaa.gov/IPS/hpd/hpd.html",
+            "format": "HTML",
+            "position": 9
+        },
+        {
+            "name": "NOAA National Centers for Environmental Information (NCEI)",
+            "description": "NCEI home page with information, data access and contact information.",
+            "url": "https://www.ncei.noaa.gov",
+            "format": "",
+            "position": 10
+        },
+        {
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "format": "",
+            "position": 11
+        },
+        {
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "format": "",
+            "position": 12
+        },
+        {
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "format": "",
+            "position": 13
+        },
+        {
+            "name": "Global Change Master Directory (GCMD) Keywords",
+            "description": "The information provided on this page seeks to define how the GCMD Keywords are structured, used and accessed. It also provides information on how users can participate in the further development of the keywords.",
+            "url": "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords",
+            "format": "",
+            "position": 14
+        },
+        {
+            "name": "Hourly Precipitation Data (HPD) Publication",
+            "description": "Follow the link for more information about the related Hourly Precipitation Data Publication.",
+            "url": "https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00127/html",
+            "format": "",
+            "position": 15
+        }
+    ]
+}

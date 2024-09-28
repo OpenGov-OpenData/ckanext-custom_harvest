@@ -137,18 +137,22 @@ class PackageSearchHarvester(CustomHarvester):
                 guids_in_source.append(guid)
                 log.info('Creating HarvestObject for %s %s', pkg_dict['name'], pkg_dict['id'])
                 if guid in guids_in_db:
-                    # Dataset needs to be udpated
+                    # Dataset needs to be updated
                     obj = HarvestObject(guid=guid, job=harvest_job,
                                         package_id=guid_to_package_id[guid],
                                         content=json.dumps(pkg_dict),
-                                        extras=[HarvestObjectExtra(key='status',
-                                                                value='change')])
+                                        extras=[
+                                            HarvestObjectExtra(key='status', value='change'),
+                                            HarvestObjectExtra(key='base_search_url', value=base_search_url)
+                                        ])
                 else:
                     # Dataset needs to be created
                     obj = HarvestObject(guid=guid, job=harvest_job,
                                         content=json.dumps(pkg_dict),
-                                        extras=[HarvestObjectExtra(key='status',
-                                                                value='new')])
+                                        extras=[
+                                            HarvestObjectExtra(key='status', value='new'),
+                                            HarvestObjectExtra(key='base_search_url', value=base_search_url)
+                                        ])
                 obj.save()
                 ids.append(obj.id)
 
@@ -255,6 +259,7 @@ class PackageSearchHarvester(CustomHarvester):
             log.error('No harvest object received')
             return False
 
+        base_search_url = self._get_object_extra(harvest_object, 'base_search_url')
         status = self._get_object_extra(harvest_object, 'status')
         if status == 'delete':
             # Delete package
@@ -287,27 +292,31 @@ class PackageSearchHarvester(CustomHarvester):
         package_dict = converter.package_search_to_ckan(source_dict)
 
         if source_dict.get('type') != 'dataset':
-            log.warn('Remote dataset is not a dataset, ignoring...')
+            log.warning('Remote dataset is not a dataset, ignoring...')
             return True
 
-        if not package_dict.get('name'):
-            package_dict['name'] = \
-                self._get_package_name(harvest_object, source_dict['name'])
-
         try:
-            # copy across resource ids from the existing dataset, otherwise they'll
+            # copy across ids from the existing dataset, otherwise they'll
             # be recreated with new ids
             if status == 'change':
                 existing_dataset = self._get_existing_dataset(harvest_object.guid)
                 if existing_dataset:
                     copy_across_resource_ids(existing_dataset, package_dict, self.config)
+                    package_dict['name'] = existing_dataset.get('name')
+                    # Copy across private status
+                    if 'private' in existing_dataset.keys():
+                        package_dict['private'] = existing_dataset['private']
+
+            # Set name for new package to prevent name conflict
+            if not package_dict.get('name'):
+                package_dict['name'] = self._gen_new_name(source_dict.get('name'))
 
             package_dict = self.modify_package_dict(package_dict, source_dict, harvest_object)
 
             # Get owner organization from the harvest source dataset
-            source_dataset = model.Package.get(harvest_object.source.id)
-            if source_dataset.owner_org:
-                package_dict['owner_org'] = source_dataset.owner_org
+            harvest_source_dataset = model.Package.get(harvest_object.source.id)
+            if harvest_source_dataset.owner_org:
+                package_dict['owner_org'] = harvest_source_dataset.owner_org
 
             # Flag this object as the current one
             harvest_object.current = True
@@ -351,12 +360,9 @@ class PackageSearchHarvester(CustomHarvester):
                 # Upload tabular resources to datastore
                 upload_to_datastore = self.config.get('upload_to_datastore', True)
                 if upload_to_datastore:
-                    if status == 'new':
-                        new_package_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
-                        upload_resources_to_datastore(context, new_package_dict, source_dict)
-                    if status == 'change':
-                        # Submit to xloader if modified date is different since resource urls may not change
-                        upload_resources_to_datastore(context, package_dict, source_dict)
+                    # Get package dict again in case there's new resource ids
+                    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
+                    upload_resources_to_datastore(context, pkg_dict, source_dict, base_search_url)
         except Exception as e:
             dataset = json.loads(harvest_object.content)
             dataset_name = dataset.get('name', '')
@@ -385,9 +391,9 @@ def copy_across_resource_ids(existing_dataset, harvested_dataset, config=None):
     # start with the surest way of identifying a resource, before reverting
     # to closest matches.
     resource_identity_functions = [
-        lambda r: r['uri'],  # URI is best
-        lambda r: (r['url'], r['title'], r['format']),
-        lambda r: (r['url'], r['title']),
+        lambda r: (r['url'], r['name'], r['format'], r['position']),
+        lambda r: (r['url'], r['name'], r['format']),
+        lambda r: (r['url'], r['name']),
         lambda r: r['url'],  # same URL is fine if nothing else matches
     ]
 
@@ -437,15 +443,13 @@ def copy_across_resource_ids(existing_dataset, harvested_dataset, config=None):
                     harvested_dataset['resources'].append(existing_resource)
     except Exception:
         pass
-    if 'private' in existing_dataset.keys():
-        harvested_dataset['private'] = existing_dataset['private']
 
 
-def upload_resources_to_datastore(context, package_dict, harvest_object):
+def upload_resources_to_datastore(context, package_dict, source_dict, base_search_url):
     for resource in package_dict.get('resources'):
         if utils.is_xloader_format(resource.get('format')) and resource.get('id'):
             # Get data dictionary if available and push to datastore
-            push_data_dictionary(context, resource, harvest_object)
+            push_data_dictionary(context, resource, source_dict, base_search_url)
 
             # Submit the resource to be pushed to the datastore
             try:
@@ -460,19 +464,38 @@ def upload_resources_to_datastore(context, package_dict, harvest_object):
                 pass
 
 
-def push_data_dictionary(context, resource, harvest_object):
+def push_data_dictionary(context, resource, source_dict, base_search_url):
     # Check for resource's data dictionary
     fields = []
-    try:
-        datastore_dict = {
-            'resource_id': resource.get('id'),
-            'fields': fields,
-            'force': True
-        }
-        p.toolkit.get_action('datastore_create')(context, datastore_dict)
-    except p.toolkit.ValidationError as e:
-        log.debug(e)
-        pass
+    for source_resource in source_dict.get('resources'):
+        if (resource.get('url') == source_resource.get('url') and
+                resource.get('title') == source_resource.get('name') and
+                source_resource.get('datastore_active')):
+            try:
+                query_url = base_search_url + '/api/action/datastore_search?limit=0&resource_id=' + source_resource.get('id')
+                datastore_response = requests.get(query_url, timeout=30)
+                data = datastore_response.json()
+                result = data.get('result', {})
+                fields = result.get('fields', [])
+                if len(fields) > 0 and fields[0].get('id') == '_id':
+                    del fields[0]  # Remove the first dictionary which is only for ckan row number
+                break
+            except Exception as e:
+                log.debug(e)
+                pass
+    # If fields are defined push the data dictionary to datastore
+    if fields:
+        log.info('Pushing data dictionary for resource '.format(resource.get('id')))
+        try:
+            datastore_dict = {
+                'resource_id': resource.get('id'),
+                'fields': fields,
+                'force': True
+            }
+            p.toolkit.get_action('datastore_create')(context, datastore_dict)
+        except Exception as e:
+            log.debug(e)
+            pass
 
 class ContentFetchError(Exception):
     pass

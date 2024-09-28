@@ -21,6 +21,7 @@ from ckanext.custom_harvest.configuration_processors import (
     DefaultGroups, DefaultValues,
     MappingFields, CompositeMapping,
     ContactPoint,
+    RemoteGroups,
     OrganizationFilter,
     ResourceFormatOrder,
     KeepExistingResources,
@@ -45,6 +46,7 @@ class CustomHarvester(HarvesterBase):
         MappingFields,
         CompositeMapping,
         ContactPoint,
+        RemoteGroups,
         OrganizationFilter,
         ResourceFormatOrder,
         KeepExistingResources,
@@ -60,20 +62,6 @@ class CustomHarvester(HarvesterBase):
             if extra.key == key:
                 return extra.value
         return None
-
-    def _get_package_name(self, harvest_object, title):
-
-        package = harvest_object.package
-        if package is None or package.title != title:
-            name = self._gen_new_name(title)
-            if not name:
-                raise Exception(
-                    'Could not generate a unique name from the title or the '
-                    'GUID. Please choose a more unique title.')
-        else:
-            name = package.name
-
-        return name
 
     def get_original_url(self, harvest_object_id):
         obj = model.Session.query(HarvestObject). \
