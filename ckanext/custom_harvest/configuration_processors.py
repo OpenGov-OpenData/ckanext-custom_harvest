@@ -369,8 +369,8 @@ class ContactPoint(BaseConfigProcessor):
         target_email = contact_point_mapping.get('target_email')
 
         # Get contact point name
-        contact_point_name = contact_point_mapping.get('default_name')
-        if source_name.startswith('extras.'):
+        contact_point_name = ''
+        if source_name and source_name.startswith('extras.'):
             source_extra = get_extra(source_name[7:], source_dict)
             if source_extra:
                 contact_point_name = source_extra.get('value')
@@ -395,8 +395,8 @@ class ContactPoint(BaseConfigProcessor):
             package_dict['extras'].remove(existing_extra)
 
         # Get contact point email
-        contact_point_email = contact_point_mapping.get('default_email')
-        if source_email.startswith('extras.'):
+        contact_point_email = ''
+        if source_email and source_email.startswith('extras.'):
             source_extra = get_extra(source_email[7:], source_dict)
             if source_extra:
                 contact_point_email = source_extra.get('value') 
