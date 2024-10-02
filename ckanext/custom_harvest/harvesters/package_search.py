@@ -29,7 +29,7 @@ class PackageSearchHarvester(CustomHarvester):
 
     def info(self):
         return {
-            'name': 'package_search_harvester',
+            'name': 'package_search_harvest',
             'title': 'CKAN Package Search',
             'description': 'Harvester for CKAN instances utilizing the package_search API',
             'form_config_interface': 'Text'
@@ -359,7 +359,7 @@ class PackageSearchHarvester(CustomHarvester):
 
                 # Upload tabular resources to datastore
                 upload_to_datastore = self.config.get('upload_to_datastore', True)
-                if upload_to_datastore:
+                if upload_to_datastore and p.get_plugin('xloader'):
                     # Get package dict again in case there's new resource ids
                     pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
                     upload_resources_to_datastore(context, pkg_dict, source_dict, base_search_url)

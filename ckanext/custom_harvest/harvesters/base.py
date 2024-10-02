@@ -1,15 +1,7 @@
-import os
 import logging
-
-import six
-import requests
-import rdflib
 
 from ckan import plugins as p
 from ckan import model
-
-from ckantoolkit import config
-import ckan.plugins.toolkit as toolkit
 
 from ckanext.harvest.harvesters import HarvesterBase
 from ckanext.harvest.model import HarvestObject
