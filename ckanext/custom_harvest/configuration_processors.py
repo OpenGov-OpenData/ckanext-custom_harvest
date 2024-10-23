@@ -380,49 +380,51 @@ class ContactPoint(BaseConfigProcessor):
         target_email = contact_point_mapping.get('target_email')
 
         # Get contact point name
-        contact_point_name = ''
-        if source_name and source_name.startswith('extras.'):
-            source_extra = get_extra(source_name[7:], source_dict)
-            if source_extra:
-                contact_point_name = source_extra.get('value')
-                try:
-                    contact_point_json = json.loads(contact_point_name)
-                    if isinstance(contact_point_json, list):
-                        if contact_point_json[0].get('name'):
-                            contact_point_name = contact_point_json[0].get('name')
-                except:
-                    pass
-        elif source_name:
-            contact_point_name = source_dict.get(source_name)
+        if target_name:
+            contact_point_name = ''
+            if source_name and source_name.startswith('extras.'):
+                source_extra = get_extra(source_name[7:], source_dict)
+                if source_extra:
+                    contact_point_name = source_extra.get('value')
+                    try:
+                        contact_point_json = json.loads(contact_point_name)
+                        if isinstance(contact_point_json, list):
+                            if contact_point_json[0].get('name'):
+                                contact_point_name = contact_point_json[0].get('name')
+                    except:
+                        pass
+            elif source_name:
+                contact_point_name = source_dict.get(source_name)
 
-        if not contact_point_name:
-            contact_point_name = contact_point_mapping.get('default_name')
+            if not contact_point_name:
+                contact_point_name = contact_point_mapping.get('default_name')
 
-        package_dict[target_name] = contact_point_name
+            package_dict[target_name] = contact_point_name
 
-        # Remove contact name from extras
-        existing_extra = get_extra(target_name, package_dict)
-        if existing_extra:
-            package_dict['extras'].remove(existing_extra)
+            # Remove contact name from extras
+            existing_extra = get_extra(target_name, package_dict)
+            if existing_extra:
+                package_dict['extras'].remove(existing_extra)
 
         # Get contact point email
-        contact_point_email = ''
-        if source_email and source_email.startswith('extras.'):
-            source_extra = get_extra(source_email[7:], source_dict)
-            if source_extra:
-                contact_point_email = source_extra.get('value') 
-        elif source_email:
-            contact_point_email = source_dict.get(source_email)
-        
-        if not contact_point_email:
-            contact_point_email = contact_point_mapping.get('default_email')
+        if target_email:
+            contact_point_email = ''
+            if source_email and source_email.startswith('extras.'):
+                source_extra = get_extra(source_email[7:], source_dict)
+                if source_extra:
+                    contact_point_email = source_extra.get('value')
+            elif source_email:
+                contact_point_email = source_dict.get(source_email)
 
-        package_dict[target_email] = contact_point_email
+            if not contact_point_email:
+                contact_point_email = contact_point_mapping.get('default_email')
 
-        # Remove contact email from extras
-        existing_extra = get_extra(target_email, package_dict)
-        if existing_extra:
-            package_dict['extras'].remove(existing_extra)
+            package_dict[target_email] = contact_point_email
+
+            # Remove contact email from extras
+            existing_extra = get_extra(target_email, package_dict)
+            if existing_extra:
+                package_dict['extras'].remove(existing_extra)
 
 
 class RemoteGroups(BaseConfigProcessor):
