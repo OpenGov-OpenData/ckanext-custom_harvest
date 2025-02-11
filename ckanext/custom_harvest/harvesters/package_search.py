@@ -85,6 +85,7 @@ class PackageSearchHarvester(CustomHarvester):
 
         query = ''
         fq_terms = []
+        ext_bbox = ''
         # Get package query
         query_string = harvest_job.source.url.split('/action/package_search?')[-1]
         if query_string:
@@ -98,6 +99,8 @@ class PackageSearchHarvester(CustomHarvester):
                 query = ' '.join(query_dict.get('q'))
             if query_dict.get('fq'):
                 fq_terms.append(' '.join(query_dict.get('fq')))
+            if query_dict.get('ext_bbox'):
+                ext_bbox = ','.join(query_dict.get('ext_bbox'))
 
         # Filter in/out datasets from particular organizations
         org_filter_include = self.config.get('organizations_filter_include', [])
@@ -111,8 +114,12 @@ class PackageSearchHarvester(CustomHarvester):
 
         # Request all remote packages
         try:
-            pkg_dicts = self._search_for_datasets(base_search_url, query,
-                                                    fq_terms)
+            pkg_dicts = self._search_for_datasets(
+                base_search_url,
+                query,
+                fq_terms,
+                ext_bbox
+            )
             log.info('Found %s datasets at CKAN: %s',
                         len(pkg_dicts), base_search_url)
         except SearchError as e:
@@ -184,7 +191,7 @@ class PackageSearchHarvester(CustomHarvester):
 
         return ids
 
-    def _search_for_datasets(self, base_search_url, query=None, fq_terms=None):
+    def _search_for_datasets(self, base_search_url, query=None, fq_terms=None, ext_bbox=None):
         '''Does a dataset search on a remote CKAN and returns the results.
 
         Deals with paging to return all the results, not just the first page.
@@ -197,6 +204,8 @@ class PackageSearchHarvester(CustomHarvester):
             params['q'] = query
         if fq_terms:
             params['fq'] = ' '.join(fq_terms)
+        if ext_bbox:
+            params['ext_bbox'] = ext_bbox
 
         pkg_dicts = []
         pkg_ids = set()
