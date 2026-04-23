@@ -1,1 +1,2 @@
 from ckanext.custom_harvest.harvesters.package_search import PackageSearchHarvester
+from ckanext.custom_harvest.harvesters.datagov import DataGovHarvester

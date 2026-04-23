@@ -89,6 +89,7 @@ setup(
         [ckan.plugins]
         custom_harvest=ckanext.custom_harvest.plugin:CustomHarvestPlugin
         package_search_harvester=ckanext.custom_harvest.harvesters:PackageSearchHarvester
+        datagov_harvester=ckanext.custom_harvest.harvesters:DataGovHarvester
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
