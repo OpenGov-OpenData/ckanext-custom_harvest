@@ -113,11 +113,13 @@ DATASETS = [
         'dcat': {
             'accessLevel': 'public',
             'modified': '2026-04-15T12:00:00Z',
+            'issued': '2020-01-15T00:00:00Z',
             'contactPoint': {
                 'fn': 'John Doe',
                 'hasEmail': 'mailto:john.doe@epa.gov'
             },
             'license': 'https://creativecommons.org/publicdomain/zero/1.0/',
+            'rights': 'This dataset is in the public domain.',
             'spatial': '-127.00000000,32.50000000,-114.10000000,42.00000000',
             'temporal': '2020-01-01/2026-01-01',
             'bureauCode': ['020:00'],

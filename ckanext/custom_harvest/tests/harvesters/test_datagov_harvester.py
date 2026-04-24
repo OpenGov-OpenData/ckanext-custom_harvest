@@ -7,6 +7,7 @@ from ckantoolkit.tests.factories import Organization
 
 from ckanext.harvest.tests.factories import (HarvestSourceObj, HarvestJobObj,
                                              HarvestObjectObj)
+from ckanext.harvest.model import HarvestObjectExtra
 from ckanext.harvest.tests.lib import run_harvest_job
 import ckanext.harvest.model as harvest_model
 
@@ -86,7 +87,7 @@ class TestDataGovHarvester(object):
         source = HarvestSourceObj(
             url='http://localhost:%s/search' % mock_datagov.PORT,
             config='',
-            source_type='datagov_harvest'
+            source_type='test'
         )
         job = HarvestJobObj(source=source, run=False)
         results_by_guid = run_harvest_job(job, DataGovHarvester())
@@ -105,14 +106,20 @@ class TestDataGovHarvester(object):
             job__source__owner_org=org['id']
         )
 
+        # Add status extra
+        extra = HarvestObjectExtra(object=harvest_object, key='status', value='new')
+        extra.save()
+
         harvester = DataGovHarvester()
         result = harvester.import_stage(harvest_object)
 
         assert result is True
+        assert harvest_object.package_id is not None
 
         # Verify package was created with correct fields
         import ckan.plugins as p
-        context = {'ignore_auth': True}
+        from ckan import model
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session}
         package = p.toolkit.get_action('package_show')(
             context, {'id': harvest_object.package_id}
         )
@@ -133,6 +140,7 @@ class TestDataGovHarvester(object):
         assert extras_dict['publisher'] == mock_datagov.DATASETS[0]['publisher']
         assert extras_dict['contact_name'] == 'John Doe'
         assert extras_dict['contact_email'] == 'john.doe@epa.gov'
+        assert extras_dict['dcat_rights'] == 'This dataset is in the public domain.'
 
         # Check resources
         assert len(package['resources']) == 2
@@ -259,11 +267,13 @@ class TestDataGovConverter(object):
 
         # DCAT fields
         assert extras_dict['dcat_access_level'] == 'public'
+        assert extras_dict['dcat_issued'] == '2020-01-15'
         assert extras_dict['contact_name'] == 'John Doe'
         assert extras_dict['contact_email'] == 'john.doe@epa.gov'
         assert 'spatial' in extras_dict
         assert extras_dict['temporal'] == '2020-01-01/2026-01-01'
         assert extras_dict['landing_page'] == 'https://www.epa.gov/waterdata/water-quality'
+        assert extras_dict['dcat_rights'] == 'This dataset is in the public domain.'
 
     def test_datagov_to_ckan_license_mapping(self):
         '''Test license URL mapping'''

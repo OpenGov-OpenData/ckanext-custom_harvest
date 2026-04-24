@@ -10,6 +10,20 @@ from ckan.lib.helpers import json
 log = logging.getLogger(__name__)
 mimetypes.init()
 
+# Cache for license list
+_license_list_cache = None
+
+
+def _get_license_list():
+    '''Get cached license list to avoid repeated API calls'''
+    global _license_list_cache
+    if _license_list_cache is None:
+        try:
+            _license_list_cache = toolkit.get_action('license_list')({}, {})
+        except Exception:
+            _license_list_cache = []
+    return _license_list_cache
+
 
 def package_search_to_ckan(source_dict):
     package_dict = {}
@@ -17,7 +31,7 @@ def package_search_to_ckan(source_dict):
     package_dict['title'] = source_dict.get('title')
     package_dict['notes'] = source_dict.get('notes', '')
 
-    if 'fluent' in config.get('ckan.plugins'):
+    if 'fluent' in config.get('ckan.plugins', ''):
         package_dict['title_translated'] = {'en': source_dict.get('title')}
         package_dict['notes_translated'] = {'en': source_dict.get('notes', '') or ''}
     
@@ -38,7 +52,7 @@ def package_search_to_ckan(source_dict):
             package_dict['extras'].append({'key': extra.get('key'), 'value': extra.get('value')})
     
     if source_dict.get('license'):
-        for license in toolkit.get_action('license_list')({}, {}):
+        for license in _get_license_list():
             if license.get('url') == source_dict.get('license'):
                 package_dict['license_id'] = license.get('id')
                 break
@@ -72,7 +86,7 @@ def package_search_to_ckan(source_dict):
             'format': format,
         }
 
-        if 'fluent' in config.get('ckan.plugins'):
+        if 'fluent' in config.get('ckan.plugins', ''):
             resource['name_translated'] = {'en': source_resource.get('name')}
             resource['description_translated'] = {'en': source_resource.get('description', '') or ''}
 
@@ -130,12 +144,15 @@ def datagov_to_ckan(source_dict):
     '''
     package_dict = {}
 
+    # Get DCAT object
+    dcat = source_dict.get('dcat', {})
+
     # Basic metadata from top-level fields
     package_dict['title'] = source_dict.get('title', 'Untitled Dataset')
     package_dict['notes'] = source_dict.get('description', '')
 
     # Fluent support (if enabled)
-    if 'fluent' in config.get('ckan.plugins'):
+    if 'fluent' in config.get('ckan.plugins', ''):
         package_dict['title_translated'] = {'en': source_dict.get('title', 'Untitled Dataset')}
         package_dict['notes_translated'] = {'en': source_dict.get('description', '') or ''}
 
@@ -154,8 +171,6 @@ def datagov_to_ckan(source_dict):
     themes = set()
     if source_dict.get('theme'):
         themes.update(source_dict.get('theme'))
-
-    dcat = source_dict.get('dcat', {})
     if dcat.get('theme'):
         themes.update(dcat.get('theme'))
 
@@ -216,90 +231,102 @@ def datagov_to_ckan(source_dict):
         })
 
     # DCAT-US metadata (core fields)
-    dcat = source_dict.get('dcat', {})
-    if dcat:
-        # Access level
-        if dcat.get('accessLevel'):
+    # Access level
+    if dcat.get('accessLevel'):
+        package_dict['extras'].append({
+            'key': 'dcat_access_level',
+            'value': dcat.get('accessLevel')
+        })
+
+    # Modified date
+    if dcat.get('modified'):
+        package_dict['extras'].append({
+            'key': 'dcat_modified',
+            'value': trim_date(dcat.get('modified'))
+        })
+
+    # Issued date
+    if dcat.get('issued'):
+        package_dict['extras'].append({
+            'key': 'dcat_issued',
+            'value': trim_date(dcat.get('issued'))
+        })
+
+    # Contact point
+    contact_point = dcat.get('contactPoint', {})
+    if contact_point:
+        if contact_point.get('fn'):
             package_dict['extras'].append({
-                'key': 'dcat_access_level',
-                'value': dcat.get('accessLevel')
+                'key': 'contact_name',
+                'value': contact_point.get('fn')
+            })
+        if contact_point.get('hasEmail'):
+            email = contact_point.get('hasEmail', '').replace('mailto:', '')
+            package_dict['extras'].append({
+                'key': 'contact_email',
+                'value': email
             })
 
-        # Modified date
-        if dcat.get('modified'):
-            package_dict['extras'].append({
-                'key': 'dcat_modified',
-                'value': trim_date(dcat.get('modified'))
-            })
+    # License
+    if dcat.get('license'):
+        license_id = map_datagov_license(dcat.get('license'))
+        if license_id:
+            package_dict['license_id'] = license_id
 
-        # Contact point
-        contact_point = dcat.get('contactPoint', {})
-        if contact_point:
-            if contact_point.get('fn'):
+    # Rights
+    if dcat.get('rights'):
+        package_dict['extras'].append({
+            'key': 'dcat_rights',
+            'value': dcat.get('rights')
+        })
+
+    # Spatial (GeoJSON) - prefer spatial_shape over dcat.spatial
+    # spatial_shape is a proper GeoJSON polygon, dcat.spatial is just a bbox string
+    spatial_value = None
+
+    # First try spatial_shape from top-level (GeoJSON polygon)
+    if source_dict.get('spatial_shape'):
+        spatial_value = source_dict.get('spatial_shape')
+        if isinstance(spatial_value, dict):
+            spatial_value = json.dumps(spatial_value)
+    # Fall back to dcat.spatial (bounding box string)
+    elif dcat.get('spatial'):
+        spatial_value = dcat.get('spatial')
+        if isinstance(spatial_value, dict):
+            spatial_value = json.dumps(spatial_value)
+
+    if spatial_value:
+        package_dict['extras'].append({
+            'key': 'spatial',
+            'value': spatial_value
+        })
+
+    # Spatial centroid (for map display/search)
+    if source_dict.get('spatial_centroid'):
+        centroid = source_dict.get('spatial_centroid')
+        if isinstance(centroid, dict):
+            # Store as "lat,lon" string for compatibility
+            lat = centroid.get('lat')
+            lon = centroid.get('lon')
+            if lat is not None and lon is not None:
                 package_dict['extras'].append({
-                    'key': 'contact_name',
-                    'value': contact_point.get('fn')
-                })
-            if contact_point.get('hasEmail'):
-                email = contact_point.get('hasEmail', '').replace('mailto:', '')
-                package_dict['extras'].append({
-                    'key': 'contact_email',
-                    'value': email
+                    'key': 'spatial_centroid',
+                    'value': '{},{}'.format(lat, lon)
                 })
 
-        # License
-        if dcat.get('license'):
-            license_id = map_datagov_license(dcat.get('license'))
-            if license_id:
-                package_dict['license_id'] = license_id
+    # Temporal
+    if dcat.get('temporal'):
+        package_dict['extras'].append({
+            'key': 'temporal',
+            'value': dcat.get('temporal')
+        })
 
-        # Spatial (GeoJSON) - prefer spatial_shape over dcat.spatial
-        # spatial_shape is a proper GeoJSON polygon, dcat.spatial is just a bbox string
-        spatial_value = None
-
-        # First try spatial_shape from top-level (GeoJSON polygon)
-        if source_dict.get('spatial_shape'):
-            spatial_value = source_dict.get('spatial_shape')
-            if isinstance(spatial_value, dict):
-                spatial_value = json.dumps(spatial_value)
-        # Fall back to dcat.spatial (bounding box string)
-        elif dcat.get('spatial'):
-            spatial_value = dcat.get('spatial')
-            if isinstance(spatial_value, dict):
-                spatial_value = json.dumps(spatial_value)
-
-        if spatial_value:
-            package_dict['extras'].append({
-                'key': 'spatial',
-                'value': spatial_value
-            })
-
-        # Spatial centroid (for map display/search)
-        if source_dict.get('spatial_centroid'):
-            centroid = source_dict.get('spatial_centroid')
-            if isinstance(centroid, dict):
-                # Store as "lat,lon" string for compatibility
-                lat = centroid.get('lat')
-                lon = centroid.get('lon')
-                if lat is not None and lon is not None:
-                    package_dict['extras'].append({
-                        'key': 'spatial_centroid',
-                        'value': '{},{}'.format(lat, lon)
-                    })
-
-        # Temporal
-        if dcat.get('temporal'):
-            package_dict['extras'].append({
-                'key': 'temporal',
-                'value': dcat.get('temporal')
-            })
-
-        # Landing page
-        if dcat.get('landingPage'):
-            package_dict['extras'].append({
-                'key': 'landing_page',
-                'value': dcat.get('landingPage')
-            })
+    # Landing page
+    if dcat.get('landingPage'):
+        package_dict['extras'].append({
+            'key': 'landing_page',
+            'value': dcat.get('landingPage')
+        })
 
     # Resources/Distributions
     package_dict['resources'] = []
@@ -321,7 +348,7 @@ def datagov_to_ckan(source_dict):
         }
 
         # Fluent support
-        if 'fluent' in config.get('ckan.plugins'):
+        if 'fluent' in config.get('ckan.plugins', ''):
             resource['name_translated'] = {'en': resource['name']}
             resource['description_translated'] = {'en': resource['description'] or ''}
 
@@ -400,14 +427,11 @@ def map_datagov_license(license_url):
         return license_mappings[license_url]
 
     # Try to match against CKAN's license list
-    try:
-        for license in toolkit.get_action('license_list')({}, {}):
-            if license.get('url') == license_url:
-                return license.get('id')
-            elif license.get('title') == license_url:
-                return license.get('id')
-    except Exception:
-        pass
+    for license in _get_license_list():
+        if license.get('url') == license_url:
+            return license.get('id')
+        elif license.get('title') == license_url:
+            return license.get('id')
 
     return None
 
@@ -422,11 +446,18 @@ def munge_tag(tag):
     tag = re.sub(r'[^a-zA-Z0-9 \-_.]', '', tag)
     tag = tag.strip()
 
-    # Truncate to max length
-    if len(tag) > 100:
-        tag = tag[:100]
+    tag = _munge_to_length(tag, 2, 100)
 
     return tag
+
+
+def _munge_to_length(string, min_length, max_length):
+    '''Pad/truncates a string'''
+    if len(string) < min_length:
+        string += '_' * (min_length - len(string))
+    if len(string) > max_length:
+        string = string[:max_length]
+    return string
 
 
 def trim_date(date_string):

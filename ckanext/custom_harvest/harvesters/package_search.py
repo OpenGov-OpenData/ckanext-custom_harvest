@@ -42,7 +42,7 @@ class PackageSearchHarvester(CustomHarvester):
             headers['Authorization'] = api_key
 
         try:
-            http_request = requests.get(url, headers=headers)
+            http_request = requests.get(url, headers=headers, timeout=30)
         except HTTPError as e:
             raise ContentFetchError('HTTP error: %s %s' % (e.response.status_code, e.request.url))
         except RequestException as e:
@@ -140,7 +140,7 @@ class PackageSearchHarvester(CustomHarvester):
             guids_in_source = []
             for pkg_dict in pkg_dicts:
                 guid = pkg_dict.get('name')
-                log.info('Got identifier: {0}'.format(guid.encode('utf8')))
+                log.info('Got identifier: {0}'.format(guid))
                 guids_in_source.append(guid)
                 log.info('Creating HarvestObject for %s %s', pkg_dict['name'], pkg_dict['id'])
                 if guid in guids_in_db:

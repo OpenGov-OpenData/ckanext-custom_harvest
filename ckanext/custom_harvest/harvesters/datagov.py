@@ -42,7 +42,7 @@ class DataGovHarvester(CustomHarvester):
             headers['Authorization'] = api_key
 
         try:
-            http_request = requests.get(url, headers=headers)
+            http_request = requests.get(url, headers=headers, timeout=30)
             http_request.raise_for_status()
         except HTTPError as e:
             raise ContentFetchError('HTTP error: %s %s' % (e.response.status_code, e.request.url))
@@ -159,7 +159,7 @@ class DataGovHarvester(CustomHarvester):
                     log.warning('Dataset missing identifier: %s', dataset_dict.get('title'))
                     continue
 
-                log.info('Got identifier: {0}'.format(guid.encode('utf8') if isinstance(guid, str) else guid))
+                log.info('Got identifier: {0}'.format(guid))
                 guids_in_source.append(guid)
                 log.info('Creating HarvestObject for %s', guid)
 
@@ -291,8 +291,6 @@ class DataGovHarvester(CustomHarvester):
     def import_stage(self, harvest_object):
         log.debug('In DataGovHarvester import_stage')
 
-        context = {'model': model, 'session': model.Session,
-                   'user': self._get_user_name()}
         if not harvest_object:
             log.error('No harvest object received')
             return False
@@ -302,7 +300,12 @@ class DataGovHarvester(CustomHarvester):
 
         if status == 'delete':
             # Delete package
-            p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
+            delete_context = {
+                'model': model,
+                'session': model.Session,
+                'user': self._get_user_name()
+            }
+            p.toolkit.get_action('package_delete')(delete_context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'
                      .format(harvest_object.package_id, harvest_object.guid))
 
@@ -372,7 +375,8 @@ class DataGovHarvester(CustomHarvester):
             harvest_object.current = True
             harvest_object.add()
 
-            context = {
+            # Context for package create/update
+            package_context = {
                 'user': self._get_user_name(),
                 'return_id_only': True,
                 'ignore_auth': True,
@@ -380,7 +384,7 @@ class DataGovHarvester(CustomHarvester):
 
             if status == 'new':
                 package_schema = logic.schema.default_create_package_schema()
-                context['schema'] = package_schema
+                package_context['schema'] = package_schema
 
                 # We need to explicitly provide a package ID
                 package_dict['id'] = str(uuid.uuid4())
@@ -404,15 +408,15 @@ class DataGovHarvester(CustomHarvester):
                 action = 'package_create' if status == 'new' else 'package_update'
                 message_status = 'Created' if status == 'new' else 'Updated'
 
-                package_id = p.toolkit.get_action(action)(context, package_dict)
+                package_id = p.toolkit.get_action(action)(package_context, package_dict)
                 log.info('%s dataset with id %s', message_status, package_id)
 
                 # Upload tabular resources to datastore
                 upload_to_datastore = self.config.get('upload_to_datastore', True)
                 if upload_to_datastore and p.plugin_loaded('xloader'):
                     # Get package dict again in case there's new resource ids
-                    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
-                    upload_resources_to_datastore(context, pkg_dict, source_dict, base_search_url)
+                    pkg_dict = p.toolkit.get_action('package_show')(package_context, {'id': package_id})
+                    upload_resources_to_datastore(package_context, pkg_dict, source_dict, base_search_url)
 
         except Exception as e:
             dataset_name = source_dict.get('slug') or source_dict.get('identifier', '')

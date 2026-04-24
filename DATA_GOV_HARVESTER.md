@@ -203,6 +203,7 @@ Data.gov's `theme` field (from both top-level and `dcat.theme`) is automatically
 |----------------|------------|-------|
 | `dcat.accessLevel` | extra: `dcat_access_level` | Access level (public, restricted, etc.) |
 | `dcat.modified` | extra: `dcat_modified` | Last modified date (trimmed to date if midnight) |
+| `dcat.issued` | extra: `dcat_issued` | Date of formal issuance (trimmed to date if midnight) |
 | `dcat.contactPoint.fn` | extra: `contact_name` | Contact person name |
 | `dcat.contactPoint.hasEmail` | extra: `contact_email` | Contact email (mailto: removed) |
 | `dcat.license` | `license_id` | License (mapped to CKAN license) |
@@ -211,6 +212,7 @@ Data.gov's `theme` field (from both top-level and `dcat.theme`) is automatically
 | `spatial_centroid` | extra: `spatial_centroid` | Center point as "lat,lon" |
 | `dcat.temporal` | extra: `temporal` | Temporal coverage |
 | `dcat.landingPage` | extra: `landing_page` | Dataset landing page URL |
+| `dcat.rights` | extra: `dcat_rights` | Rights statement or URL |
 
 **Note on Spatial Data:**
 Data.gov provides spatial data in multiple formats:
