@@ -132,6 +132,78 @@ class TestDefaultGroups:
         group_names = sorted([group_dict["name"] for group_dict in package["groups"]])
         assert group_names == ["science", "spend-data"]
 
+    def test_modify_package_default_groups_with_name_only_existing_groups(self):
+        package = {
+            "title": "Test Dataset",
+            "name": "test-dataset",
+            "groups": [{"name": "geospatial"}],
+        }
+        config = {
+            "default_groups": ["science", "spend-data"],
+            "default_group_dicts": [
+                {
+                    "id": "b1084f72-292d-11eb-adc1-0242ac120002",
+                    "name": "science",
+                    "title": "Science",
+                    "display_name": "Science",
+                    "is_organization": False,
+                    "type": "group",
+                    "state": "active",
+                },
+                {
+                    "id": "0d7090cc-12c1-4d19-85ba-9bcfc563ab7e",
+                    "name": "spend-data",
+                    "title": "Spend Data",
+                    "display_name": "Spend Data",
+                    "is_organization": False,
+                    "type": "group",
+                    "state": "active",
+                },
+            ],
+        }
+        source_dict = {}
+
+        self.processor.modify_package_dict(package, config, source_dict)
+
+        group_names = sorted([group_dict["name"] for group_dict in package["groups"]])
+        assert group_names == ["geospatial", "science", "spend-data"]
+
+    def test_modify_package_default_groups_skips_duplicate_by_name(self):
+        package = {
+            "title": "Test Dataset",
+            "name": "test-dataset",
+            "groups": [{"name": "science"}],
+        }
+        config = {
+            "default_groups": ["science", "spend-data"],
+            "default_group_dicts": [
+                {
+                    "id": "b1084f72-292d-11eb-adc1-0242ac120002",
+                    "name": "science",
+                    "title": "Science",
+                    "display_name": "Science",
+                    "is_organization": False,
+                    "type": "group",
+                    "state": "active",
+                },
+                {
+                    "id": "0d7090cc-12c1-4d19-85ba-9bcfc563ab7e",
+                    "name": "spend-data",
+                    "title": "Spend Data",
+                    "display_name": "Spend Data",
+                    "is_organization": False,
+                    "type": "group",
+                    "state": "active",
+                },
+            ],
+        }
+        source_dict = {}
+
+        self.processor.modify_package_dict(package, config, source_dict)
+
+        group_names = sorted([group_dict["name"] for group_dict in package["groups"]])
+        assert group_names == ["science", "spend-data"]
+
 
 class TestDefaultExtras:
 

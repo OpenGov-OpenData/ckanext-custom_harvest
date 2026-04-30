@@ -132,10 +132,18 @@ class DefaultGroups(BaseConfigProcessor):
         if default_groups:
             if 'groups' not in package_dict:
                 package_dict['groups'] = []
-            existing_group_ids = [g['id'] for g in package_dict['groups']]
+            existing_ids = set()
+            existing_names = set()
+            for group in package_dict['groups']:
+                group_id = group.get('id')
+                if group_id:
+                    existing_ids.add(group_id)
+                group_name = group.get('name')
+                if group_name:
+                    existing_names.add(group_name)
             package_dict['groups'].extend(
                 [{'name': g['name']} for g in config['default_group_dicts']
-                 if g['id'] not in existing_group_ids])
+                 if g['id'] not in existing_ids and g['name'] not in existing_names])
 
 
 class DefaultExtras(BaseConfigProcessor):
@@ -448,7 +456,7 @@ class RemoteGroups(BaseConfigProcessor):
         validated_groups = []
 
         existing_groups = get_action('group_list')({}, {'all_fields': True})
-        for source_group in source_dict['groups']:
+        for source_group in source_dict.get('groups', []):
             found_group = False
             for existing_group in existing_groups:
                 # Found local group

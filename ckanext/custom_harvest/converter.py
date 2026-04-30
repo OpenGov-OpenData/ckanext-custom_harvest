@@ -164,24 +164,6 @@ def datagov_to_ckan(source_dict):
             if munged_tag:
                 package_dict['tags'].append({'name': munged_tag})
 
-    # Groups - Map Data.gov themes to CKAN groups
-    package_dict['groups'] = []
-
-    # Get themes from both top-level and dcat fields
-    themes = set()
-    if source_dict.get('theme'):
-        themes.update(source_dict.get('theme'))
-    if dcat.get('theme'):
-        themes.update(dcat.get('theme'))
-
-    # Convert themes to group format with slugified names
-    for theme in themes:
-        if theme:
-            # Create a slug-friendly name from the theme
-            group_name = munge_tag(theme.lower().replace(' ', '-'))
-            if group_name:
-                package_dict['groups'].append({'name': group_name})
-
     # Extras - store comprehensive metadata
     package_dict['extras'] = []
 
