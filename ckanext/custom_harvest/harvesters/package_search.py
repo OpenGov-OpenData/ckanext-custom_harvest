@@ -455,7 +455,7 @@ def copy_across_resource_ids(existing_dataset, harvested_dataset, config=None):
 
 
 def upload_resources_to_datastore(context, package_dict, source_dict, base_search_url):
-    for resource in package_dict.get('resources'):
+    for resource in package_dict.get('resources', []):
         if utils.is_xloader_format(resource.get('format')) and resource.get('id'):
             # Get data dictionary if available and push to datastore
             push_data_dictionary(context, resource, source_dict, base_search_url)
@@ -470,13 +470,12 @@ def upload_resources_to_datastore(context, package_dict, source_dict, base_searc
                 p.toolkit.get_action('xloader_submit')(context, xloader_dict)
             except p.toolkit.ValidationError as e:
                 log.debug(e)
-                pass
 
 
 def push_data_dictionary(context, resource, source_dict, base_search_url):
     # Check for resource's data dictionary
     fields = []
-    for source_resource in source_dict.get('resources'):
+    for source_resource in source_dict.get('resources', []):
         if (resource.get('url') == source_resource.get('url') and
                 resource.get('title') == source_resource.get('name') and
                 source_resource.get('datastore_active')):
@@ -491,7 +490,6 @@ def push_data_dictionary(context, resource, source_dict, base_search_url):
                 break
             except Exception as e:
                 log.debug(e)
-                pass
     # If fields are defined push the data dictionary to datastore
     if fields:
         log.info('Pushing data dictionary for resource '.format(resource.get('id')))
@@ -504,7 +502,6 @@ def push_data_dictionary(context, resource, source_dict, base_search_url):
             p.toolkit.get_action('datastore_create')(context, datastore_dict)
         except Exception as e:
             log.debug(e)
-            pass
 
 class ContentFetchError(Exception):
     pass

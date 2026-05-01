@@ -12,14 +12,48 @@ from ckan.lib.helpers import json
 from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.custom_harvest import converter
+from ckanext.custom_harvest import utils
 from ckanext.custom_harvest.harvesters.base import CustomHarvester
-from ckanext.custom_harvest.harvesters.package_search import (
-    copy_across_resource_ids,
-    upload_resources_to_datastore
-)
+from ckanext.custom_harvest.harvesters.package_search import copy_across_resource_ids
 
 
 log = logging.getLogger(__name__)
+
+
+def _submit_resources_to_xloader(context, package_dict):
+    '''Submit tabular resources to xloader (no remote datastore field hints).'''
+    for resource in package_dict.get('resources', []):
+        if utils.is_xloader_format(resource.get('format')) and resource.get('id'):
+            try:
+                log.info('Submitting harvested resource {0} to be xloadered'.format(resource.get('id')))
+                xloader_dict = {
+                    'resource_id': resource.get('id'),
+                    'ignore_hash': False
+                }
+                p.toolkit.get_action('xloader_submit')(context, xloader_dict)
+            except p.toolkit.ValidationError as e:
+                log.debug(e)
+
+
+def _source_groups_from_datagov_themes(source_dict):
+    '''
+    Build source_dict-style group entries from DCAT themes for RemoteGroups.
+    Themes only (does not preserve any API ``groups`` on source_dict).
+    '''
+    dcat = source_dict.get('dcat', {})
+    themes = set()
+    if source_dict.get('theme'):
+        themes.update(source_dict.get('theme'))
+    if dcat.get('theme'):
+        themes.update(dcat.get('theme'))
+    groups = []
+    for theme in themes:
+        if not theme:
+            continue
+        group_name = converter.munge_tag(theme.lower().replace(' ', '-'))
+        if group_name:
+            groups.append({'name': group_name, 'title': theme})
+    return groups
 
 
 class DataGovHarvester(CustomHarvester):
@@ -295,7 +329,6 @@ class DataGovHarvester(CustomHarvester):
             log.error('No harvest object received')
             return False
 
-        base_search_url = self._get_object_extra(harvest_object, 'base_search_url')
         status = self._get_object_extra(harvest_object, 'status')
 
         if status == 'delete':
@@ -352,10 +385,8 @@ class DataGovHarvester(CustomHarvester):
                 name = source_dict.get('slug') or harvest_object.guid
                 package_dict['name'] = self._gen_new_name(name)
 
-            # Ensure source_dict has fields expected by config processors
-            # Copy groups from package_dict (which were mapped from themes) to source_dict
-            # so that RemoteGroups processor can validate them
-            source_dict['groups'] = package_dict.get('groups', [])
+            # Themes → source_dict groups for RemoteGroups (not on package_dict from converter)
+            source_dict['groups'] = _source_groups_from_datagov_themes(source_dict)
 
             # Copy extras from package_dict to source_dict so CompositeMapping and other
             # processors can reference converted fields (e.g., extras.dcat_modified)
@@ -416,7 +447,7 @@ class DataGovHarvester(CustomHarvester):
                 if upload_to_datastore and p.plugin_loaded('xloader'):
                     # Get package dict again in case there's new resource ids
                     pkg_dict = p.toolkit.get_action('package_show')(package_context, {'id': package_id})
-                    upload_resources_to_datastore(package_context, pkg_dict, source_dict, base_search_url)
+                    _submit_resources_to_xloader(package_context, pkg_dict)
 
         except Exception as e:
             dataset_name = source_dict.get('slug') or source_dict.get('identifier', '')
