@@ -20,9 +20,9 @@ from ckanext.custom_harvest.harvesters.package_search import copy_across_resourc
 log = logging.getLogger(__name__)
 
 
-def upload_resources_to_datastore(context, package_dict):
+def _submit_resources_to_xloader(context, package_dict):
     '''Submit tabular resources to xloader (no remote datastore field hints).'''
-    for resource in package_dict.get('resources') or []:
+    for resource in package_dict.get('resources', []):
         if utils.is_xloader_format(resource.get('format')) and resource.get('id'):
             try:
                 log.info('Submitting harvested resource {0} to be xloadered'.format(resource.get('id')))
@@ -33,7 +33,6 @@ def upload_resources_to_datastore(context, package_dict):
                 p.toolkit.get_action('xloader_submit')(context, xloader_dict)
             except p.toolkit.ValidationError as e:
                 log.debug(e)
-                pass
 
 
 def _source_groups_from_datagov_themes(source_dict):
@@ -41,7 +40,7 @@ def _source_groups_from_datagov_themes(source_dict):
     Build source_dict-style group entries from DCAT themes for RemoteGroups.
     Themes only (does not preserve any API ``groups`` on source_dict).
     '''
-    dcat = source_dict.get('dcat') or {}
+    dcat = source_dict.get('dcat', {})
     themes = set()
     if source_dict.get('theme'):
         themes.update(source_dict.get('theme'))
@@ -330,7 +329,6 @@ class DataGovHarvester(CustomHarvester):
             log.error('No harvest object received')
             return False
 
-        base_search_url = self._get_object_extra(harvest_object, 'base_search_url')
         status = self._get_object_extra(harvest_object, 'status')
 
         if status == 'delete':
@@ -449,7 +447,7 @@ class DataGovHarvester(CustomHarvester):
                 if upload_to_datastore and p.plugin_loaded('xloader'):
                     # Get package dict again in case there's new resource ids
                     pkg_dict = p.toolkit.get_action('package_show')(package_context, {'id': package_id})
-                    upload_resources_to_datastore(package_context, pkg_dict)
+                    _submit_resources_to_xloader(package_context, pkg_dict)
 
         except Exception as e:
             dataset_name = source_dict.get('slug') or source_dict.get('identifier', '')

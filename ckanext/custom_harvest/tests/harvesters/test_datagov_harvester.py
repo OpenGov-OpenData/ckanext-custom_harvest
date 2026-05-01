@@ -11,7 +11,10 @@ from ckanext.harvest.model import HarvestObjectExtra
 from ckanext.harvest.tests.lib import run_harvest_job
 import ckanext.harvest.model as harvest_model
 
-from ckanext.custom_harvest.harvesters.datagov import DataGovHarvester
+from ckanext.custom_harvest.harvesters.datagov import (
+    DataGovHarvester,
+    _source_groups_from_datagov_themes,
+)
 from ckanext.custom_harvest.tests.harvesters import mock_datagov
 
 
@@ -399,3 +402,42 @@ class TestDataGovConverter(object):
 
         # Second resource should use accessURL
         assert ckan_dict['resources'][1]['url'] == 'https://example.com/api'
+
+    def test_source_groups_from_datagov_themes_empty(self):
+        assert _source_groups_from_datagov_themes({}) == []
+        assert _source_groups_from_datagov_themes({'dcat': {}}) == []
+
+    def test_source_groups_from_datagov_themes_top_level_and_dcat(self):
+        source_dict = {
+            'theme': ['Climate'],
+            'dcat': {'theme': ['Science']},
+        }
+        groups = _source_groups_from_datagov_themes(source_dict)
+        by_name = {g['name']: g['title'] for g in groups}
+        assert by_name == {'climate': 'Climate', 'science': 'Science'}
+
+    def test_source_groups_from_datagov_themes_dedupes_same_theme_string(self):
+        source_dict = {
+            'theme': ['Climate'],
+            'dcat': {'theme': ['Climate']},
+        }
+        groups = _source_groups_from_datagov_themes(source_dict)
+        assert groups == [{'name': 'climate', 'title': 'Climate'}]
+
+    def test_source_groups_from_datagov_themes_skips_blank_theme(self):
+        source_dict = {'theme': ['', 'Climate']}
+        groups = _source_groups_from_datagov_themes(source_dict)
+        assert groups == [{'name': 'climate', 'title': 'Climate'}]
+
+    def test_source_groups_from_datagov_themes_distinct_strings_same_slug(self):
+        '''Different theme strings can munge to the same group name (RemoteGroups dedupes).'''
+        source_dict = {'theme': ['Economy', 'economy']}
+        groups = _source_groups_from_datagov_themes(source_dict)
+        assert len(groups) == 2
+        assert {g['name'] for g in groups} == {'economy'}
+        assert {g['title'] for g in groups} == {'Economy', 'economy'}
+
+    def test_source_groups_from_datagov_themes_munges_multiword(self):
+        source_dict = {'theme': ['Water Quality']}
+        groups = _source_groups_from_datagov_themes(source_dict)
+        assert groups == [{'name': 'water-quality', 'title': 'Water Quality'}]

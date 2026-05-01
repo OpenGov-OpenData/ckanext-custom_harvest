@@ -452,8 +452,9 @@ class RemoteGroups(BaseConfigProcessor):
         if 'groups' not in package_dict:
             package_dict['groups'] = []
 
-        # check if remote groups exist locally
-        validated_groups = []
+        # Key by canonical group name so duplicate source entries (e.g. themes that
+        # munge to the same slug) produce a single package group assignment.
+        validated_groups = {}
 
         existing_groups = get_action('group_list')({}, {'all_fields': True})
         for source_group in source_dict.get('groups', []):
@@ -464,7 +465,8 @@ class RemoteGroups(BaseConfigProcessor):
                 name_match = (source_group.get('name') == existing_group.get('name'))
                 if title_match or name_match:
                     found_group = True
-                    validated_groups.append({'id': existing_group['id'], 'name': existing_group['name']})
+                    group_name = existing_group['name']
+                    validated_groups[group_name] = {'id': existing_group['id'], 'name': group_name}
                     break
 
             if remote_groups == 'create' and not found_group:
@@ -478,11 +480,12 @@ class RemoteGroups(BaseConfigProcessor):
                         'description': source_group.get('description')
                     }
                     new_group = get_action('group_create')({'model': model, 'user': user_name}, group_dict)
-                    validated_groups.append({'id': new_group['id'], 'name': new_group['name']})
+                    group_name = new_group['name']
+                    validated_groups[group_name] = {'id': new_group['id'], 'name': group_name}
                 except Exception:
                     pass
 
-        package_dict['groups'].extend(validated_groups)
+        package_dict['groups'].extend(validated_groups.values())
 
 
 class OrganizationFilter(BaseConfigProcessor):

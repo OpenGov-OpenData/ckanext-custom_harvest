@@ -1031,6 +1031,29 @@ class TestRemoteGroups:
         group_names = sorted([group_dict.get("name") for group_dict in package["groups"]])
         assert group_names == ["climate", "science"]
 
+    def test_modify_package_deduplicates_same_group_name(self):
+        factories.Group(name="economy", title="Economy")
+        package = {
+            "title": "Test Dataset",
+            "name": "test-dataset"
+        }
+        config = {
+            "remote_groups": "only_local"
+        }
+        source_dict = {
+            "title": "Test Dataset",
+            "name": "test-dataset",
+            "groups": [
+                {"name": "economy", "title": "Economy"},
+                {"name": "economy", "title": "economy"},
+            ]
+        }
+
+        self.processor.modify_package_dict(package, config, source_dict)
+
+        group_names = [group_dict.get("name") for group_dict in package["groups"]]
+        assert group_names == ["economy"]
+
 
 class TestResourceFormatOrder:
 
